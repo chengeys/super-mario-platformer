@@ -1,0 +1,13 @@
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { height: 100%; background: #0b0e1a; overflow: hidden; font-family: "PingFang SC", "Microsoft YaHei", sans-serif; }
+#wrap { position: relative; width: 100vw; height: 100vh; display: flex; align-items: center; justify-content: center; }
+#game { max-width: 100vw; max-height: 100vh; aspect-ratio: 960 / 560; width: min(100vw, calc(100vh * 960 / 560)); image-rendering: pixelated; border-radius: 8px; box-shadow: 0 0 60px rgba(80,120,255,.15); background: #000; touch-action: none; }
+#touch { display: none; position: fixed; left: 0; right: 0; bottom: 0; padding: 0 14px calc(14px + env(safe-area-inset-bottom)); justify-content: space-between; align-items: flex-end; pointer-events: none; z-index: 20; }
+body.touch #touch { display: flex; }
+.tbtn { pointer-events: auto; width: 68px; height: 68px; border-radius: 50%; background: rgba(255,255,255,.14); border: 2px solid rgba(255,255,255,.35); color: #fff; font-size: 24px; display: flex; align-items: center; justify-content: center; user-select: none; margin-right: 10px; }
+.tbtn.big { width: 84px; height: 84px; font-size: 26px; background: rgba(255,120,60,.25); border-color: rgba(255,150,90,.5); margin-right: 0; margin-left: 10px; }
+.tbtn:active { background: rgba(255,255,255,.3); }
+#touch .grp { display: flex; }
+#hint { position: fixed; bottom: 6px; left: 0; right: 0; text-align: center; color: rgba(255,255,255,.35); font-size: 12px; pointer-events: none; z-index: 5; }
+body.touch #hint { display: none; }
+#fsBtn { position: fixed; top: 10px; right: 10px; z-index: 30; width: 40px; height: 40px; border-radius: 10px; border: 1px solid rgba(255,255,255,.3); background: rgba(20,24,40,.7); color: #fff; font-size: 18px; cursor: pointer; }
