@@ -59,13 +59,23 @@ const K = {
 const touch = { left: false, right: false, down: false, jump: false, jumpQ: false };
 function bindBtn(id, prop) {
   const el = document.getElementById(id);
-  const on = e => { e.preventDefault(); AU.init(); touch[prop] = true; if (prop === 'jump') touch.jumpQ = true; };
+  const on = e => {
+    e.preventDefault(); AU.init();
+    if (state === 'title' || state === 'gameover' || state === 'win') { startAll(); return; }
+    touch[prop] = true; if (prop === 'jump') touch.jumpQ = true;
+  };
   const off = e => { e.preventDefault(); touch[prop] = false; };
   el.addEventListener('pointerdown', on); el.addEventListener('pointerup', off);
   el.addEventListener('pointercancel', off); el.addEventListener('pointerleave', off);
 }
 bindBtn('tLeft', 'left'); bindBtn('tRight', 'right'); bindBtn('tDown', 'down'); bindBtn('tJump', 'jump');
-if (navigator.maxTouchPoints > 0) document.body.classList.add('touch');
+/* 点屏幕开始（手机无键盘） */
+canvas.addEventListener('pointerdown', () => {
+  AU.init();
+  if (state === 'title' || state === 'gameover' || state === 'win') startAll();
+});
+const IS_TOUCH = navigator.maxTouchPoints > 0;
+if (IS_TOUCH) document.body.classList.add('touch');
 function toggleFS() {
   if (!document.fullscreenElement) canvas.requestFullscreen && canvas.requestFullscreen();
   else document.exitFullscreen();
@@ -1027,9 +1037,10 @@ function drawOverlay() {
     ctx.fillStyle = '#fff'; ctx.font = '20px sans-serif';
     ctx.fillText('10 个关卡 · 顶砖块 · 吃蘑菇变大 · 踩乌龟踢龟壳 · 钻水管 · 跳旗杆拔旗！', cx, 290);
     ctx.fillStyle = '#ffd94d'; ctx.font = 'bold 22px sans-serif';
-    ctx.fillText('←→/AD 移动　空格/W/↑ 跳　↓/S 进水管', cx, 340);
+    const isTouch = IS_TOUCH;
+    ctx.fillText(isTouch ? '◀ ▶ 移动　跳 跳跃　▼ 进水管' : '←→/AD 移动　空格/W/↑ 跳　↓/S 进水管', cx, 340);
     ctx.fillStyle = '#fff'; ctx.font = '20px sans-serif';
-    if (Math.floor(time * 2) % 2 === 0) ctx.fillText('— 按 空格 开始 —', cx, 400);
+    if (Math.floor(time * 2) % 2 === 0) ctx.fillText(isTouch ? '— 点击屏幕开始 —' : '— 按 空格 开始 —', cx, 400);
     ctx.fillStyle = 'rgba(255,255,255,0.5)'; ctx.font = '15px sans-serif';
     ctx.fillText('P 暂停 · M 静音 · F 全屏', cx, 450);
   } else if (state === 'pause') {
@@ -1043,7 +1054,7 @@ function drawOverlay() {
     ctx.fillText('游戏结束', cx, 240);
     ctx.fillStyle = '#fff'; ctx.font = '22px sans-serif';
     ctx.fillText('分数：' + score, cx, 300);
-    if (Math.floor(time * 2) % 2 === 0) { ctx.fillStyle = '#ffd94d'; ctx.fillText('— 按 空格 重新开始 —', cx, 360); }
+    if (Math.floor(time * 2) % 2 === 0) { ctx.fillStyle = '#ffd94d'; ctx.fillText(IS_TOUCH ? '— 点击屏幕重新开始 —' : '— 按 空格 重新开始 —', cx, 360); }
   } else if (state === 'win') {
     ctx.fillStyle = 'rgba(0,20,0,0.8)'; ctx.fillRect(0, 0, W, H);
     ctx.textAlign = 'center';
@@ -1052,7 +1063,7 @@ function drawOverlay() {
     ctx.fillStyle = '#fff'; ctx.font = '24px sans-serif';
     ctx.fillText('你拯救了蘑菇王国！', cx, 280);
     ctx.fillText('最终分数：' + score + '　金币：' + coins, cx, 330);
-    if (Math.floor(time * 2) % 2 === 0) { ctx.fillStyle = '#7de87d'; ctx.fillText('— 按 空格 再来一局 —', cx, 390); }
+    if (Math.floor(time * 2) % 2 === 0) { ctx.fillStyle = '#7de87d'; ctx.fillText(IS_TOUCH ? '— 点击屏幕再来一局 —' : '— 按 空格 再来一局 —', cx, 390); }
   }
 }
 
